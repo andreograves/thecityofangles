@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>THE CITY of ANGLEs</title>
+<meta name="description" content="THE CITY of ANGLEs: events, stages, and the people in them. Photography by André O. Graves.">
+<meta property="og:title" content="THE CITY of ANGLEs">
+<meta property="og:image" content="https://thecityofangles.com/img/splash.jpg">
+<meta property="og:url" content="https://thecityofangles.com/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@500;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Night-stage look: black room, amber stage light, heavy uppercase type. */
+:root{
+  --bg:#0b0b0d; --ink:#f2efe8; --muted:#8f8b82; --rule:#24232a; --amber:#ffb23e; --card:#141419;
+  --sans:'Avenir Next','Avenir','Figtree','Helvetica Neue',Arial,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;overflow-x:hidden;background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+img{display:block;max-width:100%;height:auto}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+.wrap{max-width:1440px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* Splash */
+.splash{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:#000;overflow:hidden;transition:opacity .6s ease,visibility .6s}
+.splash img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55;filter:saturate(.9)}
+.splash::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,rgba(0,0,0,.1),rgba(0,0,0,.75))}
+.splash-in{position:relative;z-index:1;text-align:center;padding:24px}
+.splash .welcome{font-family:var(--mono);font-size:clamp(13px,1.6vw,16px);letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin:0 0 14px}
+.splash h1{margin:0;font-weight:900;font-size:clamp(42px,9vw,128px);line-height:.92;letter-spacing:-.01em}
+.splash h1 small{display:block;font-size:.34em;font-weight:500;letter-spacing:.3em;text-transform:none;margin:.4em 0}
+.enter{margin-top:34px;background:none;border:2px solid var(--amber);color:var(--amber);padding:12px 34px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;cursor:pointer}
+.enter:hover{background:var(--amber);color:#000}
+body.entered .splash{opacity:0;visibility:hidden}
+
+/* Header */
+.mast{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-block:20px;border-bottom:1px solid var(--rule)}
+.logo{font-weight:900;font-size:clamp(18px,2.4vw,24px);text-decoration:none;letter-spacing:.01em}
+.logo span{font-weight:500;color:var(--amber);font-size:.7em;letter-spacing:.2em;margin:0 .25em}
+.mast nav{display:flex;gap:18px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+.mast nav a{text-decoration:none;color:var(--muted)}
+.mast nav a:hover{color:var(--amber)}
+
+/* Index */
+.lede{padding-block:clamp(28px,6vw,64px) clamp(18px,3vw,30px);display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap}
+.lede h2{margin:0;font-weight:900;text-transform:uppercase;font-size:clamp(34px,6vw,76px);line-height:.95}
+.lede p{margin:0;font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.06em}
+.projects{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(12px,1.6vw,22px);padding-bottom:56px}
+@media (max-width:980px){.projects{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.projects{grid-template-columns:1fr}}
+.proj{position:relative;display:block;aspect-ratio:4/3;overflow:hidden;background:var(--card);text-decoration:none}
+.proj img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease,opacity .3s;opacity:.82}
+.proj:hover img{transform:scale(1.04);opacity:1}
+.proj .lbl{position:absolute;left:0;right:0;bottom:0;padding:14px 16px;background:linear-gradient(transparent,rgba(0,0,0,.85));display:flex;justify-content:space-between;align-items:end;gap:10px}
+.proj h3{margin:0;font-weight:900;text-transform:uppercase;font-size:clamp(18px,2vw,24px);line-height:1}
+.proj .n{font-family:var(--mono);font-size:11px;color:var(--amber);letter-spacing:.08em;white-space:nowrap}
+.proj.soon{display:grid;place-items:center;border:1px dashed #34333b;cursor:default}
+.proj.soon h3{color:var(--muted);text-align:center;padding:0 16px}
+.proj.soon .n{color:var(--muted)}
+.proj.soon .lbl{background:none}
+
+/* Project page */
+.phead{padding-block:clamp(26px,5vw,56px) 22px;display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap}
+.phead h2{margin:0;font-weight:900;text-transform:uppercase;font-size:clamp(38px,7vw,96px);line-height:.92}
+.phead p{margin:0;font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.06em}
+.back{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;color:var(--amber)}
+.grid{columns:3 300px;column-gap:14px;padding-bottom:40px}
+.grid button{display:block;width:100%;margin:0 0 14px;padding:0;border:0;background:var(--card);cursor:zoom-in;break-inside:avoid}
+.grid img{width:100%}
+.pnav{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--rule);padding-block:20px 8px;font-weight:900;text-transform:uppercase}
+.pnav a{text-decoration:none}
+.pnav a:hover{color:var(--amber)}
+.pnav small{display:block;font-family:var(--mono);font-weight:400;font-size:11px;color:var(--muted);letter-spacing:.1em}
+
+/* Lightbox */
+.lb{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.95);display:none;align-items:center;justify-content:center}
+.lb.on{display:flex}
+.lb img{max-width:94vw;max-height:88vh;width:auto;height:auto;object-fit:contain}
+.lb button{position:absolute;background:none;border:0;color:var(--ink);font-size:30px;cursor:pointer;padding:14px 18px}
+.lb button:hover{color:var(--amber)}
+.lb .x{top:6px;right:8px}.lb .pv{left:4px;top:50%;transform:translateY(-50%)}.lb .nx{right:4px;top:50%;transform:translateY(-50%)}
+.lb .ct{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:12px;color:var(--muted)}
+
+footer{border-top:1px solid var(--rule);padding-block:20px 30px;display:flex;justify-content:space-between;gap:12px 24px;flex-wrap:wrap;font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.06em}
+footer nav{display:flex;gap:18px;flex-wrap:wrap}
+footer a{text-decoration:none}
+footer a:hover{color:var(--amber)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<section class="splash" id="splash" aria-label="Welcome">
+  <img src="img/splash.jpg" alt="">
+  <div class="splash-in">
+    <p class="welcome">Welcome to…</p>
+    <h1>THE CITY<small>of</small>ANGLEs</h1>
+    <button class="enter" id="enter">Enter</button>
+  </div>
+</section>
+
+<div class="wrap">
+  <header class="mast">
+    <a class="logo" href="#/">THE CITY<span>of</span>ANGLEs</a>
+    <nav><a href="#/">Projects</a><a href="https://andreograves.com">a/o/g</a></nav>
+  </header>
+  <main id="view"></main>
+  <footer>
+    <span>© André O. Graves</span>
+    <nav>
+      <a href="https://instagram.com/the.city.of.angles">Instagram</a>
+      <a href="https://x.com/_tcoa_">X</a>
+      <a href="mailto:andre@thecityofangles.com">andre@thecityofangles.com</a>
+    </nav>
+  </footer>
+</div>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <img id="lbimg" alt="">
+  <button class="x" id="lbx" aria-label="Close">×</button>
+  <button class="pv" id="lbp" aria-label="Previous">‹</button>
+  <button class="nx" id="lbn" aria-label="Next">›</button>
+  <div class="ct" id="lbc"></div>
+</div>
+
+<script>
+const PHOTOS = {"gigi":[["gigi-01.jpg",1600,1066],["gigi-02.jpg",987,1600],["gigi-03.jpg",1077,1600],["gigi-04.jpg",1600,1016],["gigi-05.jpg",1600,1165],["gigi-06.jpg",1600,1066],["gigi-07.jpg",1600,1066],["gigi-08.jpg",1600,1066],["gigi-09.jpg",1600,1066],["gigi-10.jpg",1600,1066],["gigi-11.jpg",1600,1066],["gigi-12.jpg",1600,1066],["gigi-13.jpg",1600,1072],["gigi-14.jpg",1066,1600]],"no-layups":[["no-layups-01.jpg",1600,1067],["no-layups-02.jpg",1600,1067],["no-layups-03.jpg",1600,1067],["no-layups-04.jpg",1067,1600],["no-layups-05.jpg",1067,1600],["no-layups-06.jpg",1067,1600],["no-layups-07.jpg",1600,1067],["no-layups-08.jpg",1067,1600],["no-layups-09.jpg",1067,1600],["no-layups-10.jpg",1600,1067],["no-layups-11.jpg",1067,1600],["no-layups-12.jpg",1600,1067],["no-layups-13.jpg",1600,1067],["no-layups-14.jpg",1067,1600],["no-layups-15.jpg",1067,1600],["no-layups-16.jpg",1600,1173]],"startup-huddle":[["startup-huddle-01.jpg",1600,1066],["startup-huddle-02.jpg",1066,1600],["startup-huddle-03.jpg",1600,1066],["startup-huddle-04.jpg",1600,1066],["startup-huddle-05.jpg",1066,1600],["startup-huddle-06.jpg",1600,1067],["startup-huddle-07.jpg",1066,1600],["startup-huddle-08.jpg",1066,1600],["startup-huddle-09.jpg",1030,1600],["startup-huddle-10.jpg",1600,1052],["startup-huddle-11.jpg",1600,1066],["startup-huddle-12.jpg",1600,1066],["startup-huddle-13.jpg",1177,1600],["startup-huddle-14.jpg",1066,1600],["startup-huddle-15.jpg",1066,1600],["startup-huddle-16.jpg",1600,1066],["startup-huddle-17.jpg",1066,1600],["startup-huddle-18.jpg",1600,1066],["startup-huddle-19.jpg",1600,1066],["startup-huddle-20.jpg",1066,1600],["startup-huddle-21.jpg",1600,1066],["startup-huddle-22.jpg",1133,1600],["startup-huddle-23.jpg",1066,1600],["startup-huddle-24.jpg",1600,995],["startup-huddle-25.jpg",1600,1066],["startup-huddle-26.jpg",1158,1600],["startup-huddle-27.jpg",1600,1066],["startup-huddle-28.jpg",1600,1066],["startup-huddle-29.jpg",1600,1066],["startup-huddle-30.jpg",1600,1066],["startup-huddle-31.jpg",1066,1600],["startup-huddle-32.jpg",1600,1066],["startup-huddle-33.jpg",1066,1600],["startup-huddle-34.jpg",1066,1600],["startup-huddle-35.jpg",1066,1600],["startup-huddle-36.jpg",1600,1066],["startup-huddle-37.jpg",1600,1066],["startup-huddle-38.jpg",1600,944],["startup-huddle-39.jpg",1293,1600],["startup-huddle-40.jpg",1048,1600],["startup-huddle-41.jpg",1056,1600],["startup-huddle-42.jpg",1600,1066],["startup-huddle-43.jpg",1066,1600],["startup-huddle-44.jpg",1600,1027],["startup-huddle-45.jpg",924,1600],["startup-huddle-46.jpg",1600,1066],["startup-huddle-47.jpg",1600,1066],["startup-huddle-48.jpg",1600,1052],["startup-huddle-49.jpg",1600,1066],["startup-huddle-50.jpg",1066,1600],["startup-huddle-51.jpg",1066,1600],["startup-huddle-52.jpg",1600,1514],["startup-huddle-53.jpg",1600,1108],["startup-huddle-54.jpg",1600,1066],["startup-huddle-55.jpg",1600,1066],["startup-huddle-56.jpg",1600,1066],["startup-huddle-57.jpg",1600,1066],["startup-huddle-58.jpg",823,1600],["startup-huddle-59.jpg",1600,1066],["startup-huddle-60.jpg",1600,1066],["startup-huddle-61.jpg",1066,1600],["startup-huddle-62.jpg",1600,1066],["startup-huddle-63.jpg",1600,1066],["startup-huddle-64.jpg",917,1600],["startup-huddle-65.jpg",1600,1039],["startup-huddle-66.jpg",1002,1600],["startup-huddle-67.jpg",948,1600],["startup-huddle-68.jpg",1600,1066],["startup-huddle-69.jpg",1600,1066],["startup-huddle-70.jpg",1600,1066],["startup-huddle-71.jpg",1600,1066],["startup-huddle-72.jpg",1600,1020]],"warped":[["warped-01.jpg",1017,1600],["warped-02.jpg",1600,1045],["warped-03.jpg",1600,1066],["warped-04.jpg",1600,1066],["warped-05.jpg",1066,1600],["warped-06.jpg",1600,1066],["warped-07.jpg",1066,1600],["warped-08.jpg",1066,1600],["warped-09.jpg",1066,1600],["warped-10.jpg",1066,1600],["warped-11.jpg",1066,1600],["warped-12.jpg",1066,1600],["warped-13.jpg",1600,1066],["warped-14.jpg",1600,1066],["warped-15.jpg",1066,1600],["warped-16.jpg",1600,1066],["warped-17.jpg",1066,1600],["warped-18.jpg",1600,1067],["warped-19.jpg",1600,1067],["warped-20.jpg",1600,1067],["warped-21.jpg",1037,1600],["warped-22.jpg",1066,1600],["warped-23.jpg",1066,1600],["warped-24.jpg",1066,1600],["warped-25.jpg",1066,1600],["warped-26.jpg",1066,1600]]};
+// Live site order. Projects without photos here yet show as "coming soon".
+const PROJECTS = [
+  {slug:"the-barnes", title:"The Barnes"},
+  {slug:"the-carvers", title:"The Carvers"},
+  {slug:"no-layups", title:"No Layups", key:"no-layups", year:"2022"},
+  {slug:"real-men-real-talk", title:"Real Men / Real Talk"},
+  {slug:"warped-whores", title:"Warped Whores", key:"warped", year:"2023"},
+  {slug:"startup-huddle", title:"Startup Huddle", key:"startup-huddle", year:"2023"},
+  {slug:"gigi-noire", title:"Gigi Noire", key:"gigi"},
+  {slug:"khaled", title:"Khaled"},
+  {slug:"justin-moyar-blues", title:"Justin Moyar Blues"}
+];
+const view = document.getElementById('view');
+const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const live = PROJECTS.filter(p => p.key && PHOTOS[p.key]);
+
+function indexView(){
+  document.title = "THE CITY of ANGLEs";
+  view.innerHTML = `<section class="lede"><h2>Projects</h2><p>${PROJECTS.length} projects</p></section>
+  <div class="projects">${PROJECTS.map((p,i) => {
+    const n = String(i+1).padStart(2,'0');
+    const ph = p.key && PHOTOS[p.key];
+    if (!ph) return `<div class="proj soon"><h3>${esc(p.title)}</h3><div class="lbl"><span></span><span class="n">${n} · Coming soon</span></div></div>`;
+    return `<a class="proj" href="#/${p.slug}"><img src="img/${ph[0][0]}" width="${ph[0][1]}" height="${ph[0][2]}" alt="" loading="lazy"><div class="lbl"><h3>${esc(p.title)}</h3><span class="n">${n} · ${ph.length}</span></div></a>`;
+  }).join('')}</div>`;
+}
+
+let cur = [], idx = 0;
+function projectView(p){
+  const ph = PHOTOS[p.key]; cur = ph;
+  document.title = p.title.toUpperCase() + " | THE CITY of ANGLEs";
+  const li = live.indexOf(p), prev = live[(li-1+live.length)%live.length], next = live[(li+1)%live.length];
+  view.innerHTML = `<section class="phead"><div><a class="back" href="#/">← All projects</a><h2>${esc(p.title)}</h2></div><p>${p.year ? p.year + ' · ' : ''}${ph.length} photos</p></section>
+  <div class="grid">${ph.map((f,i) => `<button data-i="${i}" aria-label="Open photo ${i+1}"><img src="img/${f[0]}" width="${f[1]}" height="${f[2]}" alt="${esc(p.title)}, photo ${i+1}" loading="lazy"></button>`).join('')}</div>
+  <nav class="pnav"><a href="#/${prev.slug}"><small>Previous</small>${esc(prev.title)}</a><a href="#/${next.slug}" style="text-align:right"><small>Next</small>${esc(next.title)}</a></nav>`;
+  view.querySelectorAll('.grid button').forEach(b => b.onclick = () => openLb(+b.dataset.i));
+}
+
+function route(){
+  const slug = location.hash.replace(/^#\/?/, '');
+  const p = PROJECTS.find(x => x.slug === slug && x.key && PHOTOS[x.key]);
+  if (p) projectView(p); else indexView();
+  window.scrollTo(0,0);
+}
+window.addEventListener('hashchange', route);
+
+// Lightbox
+const lb = document.getElementById('lb'), lbimg = document.getElementById('lbimg'), lbc = document.getElementById('lbc');
+function show(){ const f = cur[idx]; lbimg.src = 'img/' + f[0]; lbc.textContent = (idx+1) + ' / ' + cur.length; }
+function openLb(i){ idx = i; show(); lb.classList.add('on'); document.getElementById('lbx').focus(); }
+function closeLb(){ lb.classList.remove('on'); }
+function step(d){ idx = (idx + d + cur.length) % cur.length; show(); }
+document.getElementById('lbx').onclick = closeLb;
+document.getElementById('lbp').onclick = () => step(-1);
+document.getElementById('lbn').onclick = () => step(1);
+lb.addEventListener('click', e => { if (e.target === lb) closeLb(); });
+document.addEventListener('keydown', e => {
+  if (!lb.classList.contains('on')) return;
+  if (e.key === 'Escape') closeLb(); if (e.key === 'ArrowLeft') step(-1); if (e.key === 'ArrowRight') step(1);
+});
+let tx = null;
+lb.addEventListener('touchstart', e => tx = e.touches[0].clientX, {passive:true});
+lb.addEventListener('touchend', e => { if (tx === null) return; const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 40) step(dx < 0 ? 1 : -1); tx = null; });
+
+// Splash shows once per visit; deep links skip it.
+function enter(){ document.body.classList.add('entered'); try { sessionStorage.setItem('tcoa-in','1'); } catch(e){} }
+document.getElementById('enter').onclick = enter;
+let seen = false; try { seen = sessionStorage.getItem('tcoa-in') === '1'; } catch(e){}
+if (seen || location.hash.length > 2) enter();
+route();
+</script>
+</body>
+</html>
