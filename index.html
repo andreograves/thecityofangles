@@ -52,9 +52,7 @@ body.entered .splash{opacity:0;visibility:hidden}
 .mast{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-block:20px;border-bottom:1px solid var(--rule)}
 .logo{font-weight:900;font-size:clamp(18px,2.4vw,24px);text-decoration:none;letter-spacing:.01em}
 .logo span{font:inherit;color:inherit}
-.mast nav{display:flex;gap:18px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase}
-.mast nav a{text-decoration:none;color:var(--muted)}
-.mast nav a:hover{color:var(--amber)}
+.logo:hover{color:var(--amber)}
 
 /* Index */
 .lede{padding-block:clamp(28px,6vw,64px) clamp(18px,3vw,30px);display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap}
@@ -103,7 +101,7 @@ footer{border-top:1px solid var(--rule);padding-block:28px 34px;display:flex;fle
 .social svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .social svg .dot,.social svg .fill{fill:currentColor;stroke:none}
 /* Small labels share the title's typeface, in a bold weight. */
-.splash .welcome,.mast nav,.lede p,.phead p,.back,.pnav small,.lb .ct,footer{font-weight:700}
+.splash .welcome,.lede p,.phead p,.back,.pnav small,.lb .ct,footer{font-weight:700}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -119,8 +117,7 @@ footer{border-top:1px solid var(--rule);padding-block:28px 34px;display:flex;fle
 
 <div class="wrap">
   <header class="mast">
-    <a class="logo" href="#/">THE CITY <span>of</span> ANGLEs</a>
-    <nav><a href="#/">Projects</a><a href="https://andreograves.com">a/o/g</a></nav>
+    <a class="logo" href="#/" id="home" title="Back to the welcome page">THE CITY <span>of</span> ANGLEs</a>
   </header>
   <main id="view"></main>
   <footer>
@@ -210,6 +207,15 @@ lb.addEventListener('touchend', e => { if (tx === null) return; const dx = e.cha
 // Splash shows once per visit; deep links skip it.
 function enter(){ document.body.classList.add('entered'); try { sessionStorage.setItem('tcoa-in','1'); } catch(e){} }
 document.getElementById('enter').onclick = enter;
+// The logo takes you back to the welcome splash.
+document.getElementById('home').onclick = e => {
+  e.preventDefault();
+  try { sessionStorage.removeItem('tcoa-in'); } catch(err){}
+  if (location.hash.length > 2) history.pushState(null, '', '#/');
+  route();
+  document.body.classList.remove('entered');
+  document.getElementById('enter').focus();
+};
 let seen = false; try { seen = sessionStorage.getItem('tcoa-in') === '1'; } catch(e){}
 if (seen || location.hash.length > 2) enter();
 route();
