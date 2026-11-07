@@ -53,6 +53,9 @@ body.entered .splash{opacity:0;visibility:hidden}
 .logo{font-weight:900;font-size:clamp(18px,2.4vw,24px);text-decoration:none;letter-spacing:.01em}
 .logo span{font:inherit;color:inherit}
 .logo:hover{color:var(--amber)}
+.homebtn{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border:1.5px solid var(--amber);border-radius:999px;color:var(--amber);text-decoration:none;font-weight:700;font-size:12px;letter-spacing:.18em;text-transform:uppercase;transition:background .2s,color .2s}
+.homebtn:hover{background:var(--amber);color:#000}
+.homebtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
 /* Index */
 .lede{padding-block:clamp(28px,6vw,64px) clamp(18px,3vw,30px);display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap}
@@ -117,7 +120,8 @@ footer{border-top:1px solid var(--rule);padding-block:28px 34px;display:flex;fle
 
 <div class="wrap">
   <header class="mast">
-    <a class="logo" href="#/" id="home" title="Back to the welcome page">THE CITY <span>of</span> ANGLEs</a>
+    <a class="logo home" href="#/" title="Back to the welcome page">THE CITY <span>of</span> ANGLEs</a>
+    <a class="homebtn home" href="#/" title="Back to the welcome page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 11 12 4l8.5 7"/><path d="M6 9.5V20h4.5v-5.5h3V20H18V9.5"/></svg>Home</a>
   </header>
   <main id="view"></main>
   <footer>
@@ -208,7 +212,7 @@ lb.addEventListener('touchend', e => { if (tx === null) return; const dx = e.cha
 function enter(){ document.body.classList.add('entered'); try { sessionStorage.setItem('tcoa-in','1'); } catch(e){} }
 document.getElementById('enter').onclick = enter;
 // The logo takes you back to the welcome splash.
-document.getElementById('home').onclick = e => {
+const goHome = e => {
   e.preventDefault();
   try { sessionStorage.removeItem('tcoa-in'); } catch(err){}
   if (location.hash.length > 2) history.pushState(null, '', '#/');
@@ -216,6 +220,7 @@ document.getElementById('home').onclick = e => {
   document.body.classList.remove('entered');
   document.getElementById('enter').focus();
 };
+document.querySelectorAll('.home').forEach(a => a.onclick = goHome);
 let seen = false; try { seen = sessionStorage.getItem('tcoa-in') === '1'; } catch(e){}
 if (seen || location.hash.length > 2) enter();
 route();
