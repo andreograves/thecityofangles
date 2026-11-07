@@ -96,10 +96,12 @@ body.entered .splash{opacity:0;visibility:hidden}
 .lb .x{top:6px;right:8px}.lb .pv{left:4px;top:50%;transform:translateY(-50%)}.lb .nx{right:4px;top:50%;transform:translateY(-50%)}
 .lb .ct{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:12px;color:var(--muted)}
 
-footer{border-top:1px solid var(--rule);padding-block:20px 30px;display:flex;justify-content:space-between;gap:12px 24px;flex-wrap:wrap;font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.06em}
-footer nav{display:flex;gap:18px;flex-wrap:wrap}
-footer a{text-decoration:none}
-footer a:hover{color:var(--amber)}
+footer{border-top:1px solid var(--rule);padding-block:28px 34px;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.06em}
+.social{display:flex;justify-content:center;gap:14px}
+.social a{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--muted);color:var(--ink);display:grid;place-items:center;transition:color .2s,border-color .2s,background .2s}
+.social a:hover{color:#000;background:var(--amber);border-color:var(--amber)}
+.social svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.social svg .dot,.social svg .fill{fill:currentColor;stroke:none}
 /* Small labels share the title's typeface, in a bold weight. */
 .splash .welcome,.mast nav,.lede p,.phead p,.back,.pnav small,.lb .ct,footer{font-weight:700}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -122,12 +124,12 @@ footer a:hover{color:var(--amber)}
   </header>
   <main id="view"></main>
   <footer>
-    <span>© André O. Graves</span>
-    <nav>
-      <a href="https://instagram.com/the.city.of.angles">Instagram</a>
-      <a href="https://x.com/_tcoa_">X</a>
-      <a href="mailto:andre@thecityofangles.com">andre@thecityofangles.com</a>
+    <nav class="social" aria-label="Social">
+      <a href="https://instagram.com/the.city.of.angles" aria-label="Instagram" title="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="1.1" class="dot"/></svg></a>
+      <a href="https://x.com/_tcoa_" aria-label="X" title="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 4h4.3l10.7 16h-4.3z" class="fill"/><path d="M19 4l-6.1 7M11.1 13 5 20"/></svg></a>
+      <a href="mailto:andre@thecityofangles.com" aria-label="Email andre@thecityofangles.com" title="andre@thecityofangles.com"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="m3.8 6.6 8.2 6.3 8.2-6.3"/></svg></a>
     </nav>
+    <span>© André O. Graves</span>
   </footer>
 </div>
 
