@@ -123,6 +123,20 @@ footer{border-top:1px solid var(--rule);padding-block:28px 34px;display:flex;fle
 
 .mast .homebtn{border:0;border-radius:0;padding:9px 0;font-family:var(--sans);font-weight:900;letter-spacing:0;font-size:16px;color:var(--ink)}
 .mast .homebtn:hover{background:transparent;color:var(--amber)}
+
+.cover-toolbar{padding:20px 0;border-bottom:1px solid var(--rule);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.cover-toolbar p,.cover-toolbar output{flex-basis:100%;margin:0;color:var(--muted);font-size:13px}
+.cover-toolbar button,#cover-dialog button{background:transparent;border:1px solid var(--amber);padding:10px 16px;color:var(--amber);cursor:pointer}
+.cover-toolbar textarea{width:100%;min-height:120px}
+#cover-dialog{width:min(620px,94vw);max-height:94vh;overflow:auto;background:var(--bg);color:var(--ink);border:1px solid var(--rule);padding:24px}
+#cover-dialog::backdrop{background:rgba(0,0,0,.85)}
+#cover-dialog h2{font-size:24px;margin:0 0 18px}
+.crop-preview{aspect-ratio:4/3;overflow:hidden;background:var(--card)}
+.crop-preview img{width:100%;height:100%;object-fit:cover}
+#cover-dialog label{display:block;margin-top:16px;font-size:14px}
+#cover-dialog input{display:block;width:100%;margin:12px 0;accent-color:var(--amber)}
+.crop-actions{display:flex;justify-content:space-between;gap:12px;margin-top:20px}
+.cover-mode .grid button{cursor:pointer}
 </style>
 </head>
 <body>
@@ -189,29 +203,76 @@ const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','
 PROJECTS.forEach(p => { if (PHOTOS[p.slug]) { p.key = p.slug; p.cover = 1; delete p.folder; delete p.extra; } });
 const live = PROJECTS.filter(p => p.folder || (p.key && PHOTOS[p.key]));
 
+
+const coverMode = new URLSearchParams(location.search).get('covers') === '1';
+let coverDrafts = {};
+try { const saved=JSON.parse(localStorage.getItem('tcoa-covers-v1')||'{}'); if(saved && typeof saved==='object') coverDrafts=saved; } catch(e){}
+let activeProject = null, selectedCover = null;
+const coverFor = p => {
+  const d=coverMode && coverDrafts[p.slug], ph=PHOTOS[p.key];
+  return d && ph.some(f=>f[0]===d.photo) ? {photo:ph.find(f=>f[0]===d.photo),x:d.x,y:d.y} : {photo:ph[(p.cover||1)-1]||ph[0],x:50,y:50};
+};
+function persistCovers(){
+  try { localStorage.setItem('tcoa-covers-v1',JSON.stringify(coverDrafts)); return true; }
+  catch(e){ return false; }
+}
+function pickerToolbar(){
+  if(!coverMode)return;
+  const bar=document.createElement('aside');bar.className='cover-toolbar';
+  bar.innerHTML='<strong>Choose album covers</strong><span id="cover-count"></span><button id="copy-covers">Copy all choices</button><p>Pick an album, then click a photo to adjust its cover. Choices stay in this browser. When finished, copy and paste them into our chat so I can publish them.</p><output id="cover-status" aria-live="polite"></output>';
+  document.querySelector('.mast').after(bar);
+  document.getElementById('copy-covers').onclick=async()=>{
+    const payload={version:1,site:'thecityofangles.com',covers:Object.fromEntries(Object.entries(coverDrafts).filter(([slug])=>PROJECTS.some(p=>p.slug===slug)))};
+    if(!Object.keys(payload.covers).length){document.getElementById('cover-status').textContent='Choose at least one cover first.';return;}
+    const text='Publish these City of Angles album covers:\n'+JSON.stringify(payload);
+    try { await navigator.clipboard.writeText(text); document.getElementById('cover-status').textContent='Copied. Paste into our chat to publish your covers.'; }
+    catch(e){const area=document.getElementById('cover-export');area.hidden=false;area.value=text;area.focus();area.select();document.getElementById('cover-status').textContent='Copy the selected text and paste it into our chat.';}
+  };
+  const area=document.createElement('textarea');area.id='cover-export';area.hidden=true;area.setAttribute('aria-label','All cover choices');bar.append(area);
+  updateCoverCount();
+}
+function updateCoverCount(){
+  const el=document.getElementById('cover-count');
+  if(el)el.textContent=PROJECTS.filter(p=>coverDrafts[p.slug]).length+' / '+PROJECTS.length+' selected';
+}
+function openCover(i){
+  selectedCover=cur[i];
+  const previous=coverDrafts[activeProject.slug], same=previous && previous.photo===selectedCover[0];
+  const dialog=document.getElementById('cover-dialog');
+  document.getElementById('cover-title').textContent=activeProject.title;
+  document.getElementById('cover-preview').src=photoSrc(selectedCover,1600);
+  document.getElementById('crop-x').value=same?previous.x:50;
+  document.getElementById('crop-y').value=same?previous.y:50;
+  updateCrop();dialog.showModal();
+}
+function updateCrop(){
+  document.getElementById('cover-preview').style.objectPosition=document.getElementById('crop-x').value+'% '+document.getElementById('crop-y').value+'%';
+}
+
 function indexView(){
   document.title = "THE CITY of ANGLEs";
   view.innerHTML = `<section class="lede"><h2>Projects</h2><p>${PROJECTS.length} projects</p></section>
   <div class="projects">${PROJECTS.map(p => {
     const ph = p.key && PHOTOS[p.key];
     if (!ph) return `<div class="proj soon"><h3>${esc(p.title)}</h3><div class="lbl"><span class="n">Coming soon</span></div></div>`;
-    const c = ph[(p.cover||1)-1] || ph[0];
-    return `<a class="proj" href="#/${p.slug}"><img src="${photoSrc(c)}" width="${c[1]}" height="${c[2]}" style="object-position:50% 50%" alt="" loading="lazy"><div class="lbl"><h3>${esc(p.title)}</h3></div></a>`;
+    const chosen=coverFor(p), c=chosen.photo;
+    return `<a class="proj" href="#/${p.slug}"><img src="${photoSrc(c)}" width="${c[1]}" height="${c[2]}" style="object-position:${chosen.x}% ${chosen.y}%" alt="" loading="lazy"><div class="lbl"><h3>${esc(p.title)}</h3></div></a>`;
   }).join('')}</div>`;
 }
 
 let cur = [], idx = 0;
 function projectView(p){
+  activeProject = p;
   const ph = PHOTOS[p.key]; cur = [...ph];
   for (let i = cur.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1)); [cur[i], cur[j]] = [cur[j], cur[i]];
   }
   document.title = p.title.toUpperCase() + " | THE CITY of ANGLEs";
   const li = live.indexOf(p), prev = live[(li-1+live.length)%live.length], next = live[(li+1)%live.length];
-  view.innerHTML = `<section class="phead"><div><a class="back" href="#/">← All projects</a><h2>${esc(p.title)}</h2></div><p>${p.year ? p.year + ' · ' : ''}${ph.length} photos</p></section>
+  view.innerHTML = `<section class="phead"><div><a class="back" href="#/">← All projects</a><h2>${esc(p.title)}</h2></div><p>${p.year ? p.year + ' · ' : ''}${ph.length} photos${coverMode ? ' · Click a photo to choose its cover' : ''}</p></section>
   <div class="grid">${cur.map((f,i) => `<button data-i="${i}" aria-label="Open photo ${i+1}"><img src="${photoSrc(f)}" alt="${esc(p.title)}, photo ${i+1}" loading="lazy"></button>`).join('')}</div>
   <nav class="pnav"><a href="#/${prev.slug}"><small>Previous</small>${esc(prev.title)}</a><a href="#/${next.slug}" style="text-align:right"><small>Next</small>${esc(next.title)}</a></nav>`;
-  view.querySelectorAll('.grid button').forEach(b => b.onclick = () => openLb(+b.dataset.i));
+  view.querySelectorAll('.grid button').forEach(b => b.onclick = () => coverMode ? openCover(+b.dataset.i) : openLb(+b.dataset.i));
 }
 
 function route(){
@@ -262,6 +323,22 @@ const goHome = e => {
   document.getElementById('enter').focus();
 };
 document.querySelectorAll('.home').forEach(a => a.onclick = goHome);
+
+if(coverMode){
+  pickerToolbar();
+  document.body.classList.add('cover-mode');
+  const dialog=document.createElement('dialog');dialog.id='cover-dialog';dialog.setAttribute('aria-labelledby','cover-title');
+  dialog.innerHTML='<form method="dialog"><h2 id="cover-title"></h2><div class="crop-preview"><img id="cover-preview" alt="Album cover crop preview"></div><label>Horizontal crop<input id="crop-x" type="range" min="0" max="100" value="50"></label><label>Vertical crop<input id="crop-y" type="range" min="0" max="100" value="50"></label><div class="crop-actions"><button value="cancel">Cancel</button><button id="save-cover" type="button">Use this cover</button></div></form>';
+  document.body.append(dialog);
+  ['crop-x','crop-y'].forEach(id=>document.getElementById(id).oninput=updateCrop);
+  document.getElementById('save-cover').onclick=()=>{
+    coverDrafts[activeProject.slug]={photo:selectedCover[0],x:+document.getElementById('crop-x').value,y:+document.getElementById('crop-y').value};
+    const saved=persistCovers();updateCoverCount();dialog.close();
+    document.getElementById('cover-status').textContent=activeProject.title+' cover selected.'+(saved?'':' Browser storage is unavailable; copy your choices before leaving.');
+    history.pushState(null,'','#/');route();
+  };
+  enter();
+}
 let seen = false; try { seen = sessionStorage.getItem('tcoa-in') === '1'; } catch(e){}
 if (seen || location.hash.length > 2) enter();
 route();
