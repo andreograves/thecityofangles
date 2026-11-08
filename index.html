@@ -208,8 +208,9 @@ const coverMode = new URLSearchParams(location.search).get('covers') === '1';
 let coverDrafts = {};
 try { const saved=JSON.parse(localStorage.getItem('tcoa-covers-v1')||'{}'); if(saved && typeof saved==='object') coverDrafts=saved; } catch(e){}
 let activeProject = null, selectedCover = null;
+const PUBLISHED_COVERS = {"a-super-dope-comedy-show":{"photo":"drive:1132FbZSLlJnaAzYtuiEMfjyT1tZjsI8j","x":12,"y":15},"justin-fuller-comedy":{"photo":"drive:14213wqwVy-IwyACTinTLghL8W86jD2_z","x":50,"y":7},"brian-mickens":{"photo":"drive:10FMfexFByA7YmaxPIQC8heezzvGTwOX1","x":0,"y":37},"dtla-fashion-shoot":{"photo":"drive:19ixQEI16CQC3iFELOuIXu-OiDkptDmel","x":50,"y":19},"hubby-jenkins":{"photo":"drive:1-IXqPlSP3_UF5E0a9-6ngHCz_izz1jWg","x":50,"y":9},"j-ward":{"photo":"drive:137EHUvxq0Gqxx3RJn4XSC9l3wlJ4VyHj","x":50,"y":25},"black-and-loud":{"photo":"drive:1L57VksRjksD0C3vpXoJiclNEN_gZqCwg","x":100,"y":50},"the-barnes":{"photo":"the-barnes-23.jpg","x":100,"y":50},"the-carvers":{"photo":"the-carvers-106.jpg","x":50,"y":50},"no-layups":{"photo":"no-layups-100.jpg","x":99,"y":50},"startup-huddle":{"photo":"startup-huddle-37.jpg","x":29,"y":50},"gigi-noire":{"photo":"gigi-13.jpg","x":100,"y":50},"khaled":{"photo":"khaled-43.jpg","x":74,"y":60},"justin-moyar-blues":{"photo":"justin-moyar-04.jpg","x":100,"y":0}};
 const coverFor = p => {
-  const d=coverMode && coverDrafts[p.slug], ph=PHOTOS[p.key];
+  const d=(coverMode && coverDrafts[p.slug]) || PUBLISHED_COVERS[p.slug], ph=PHOTOS[p.key];
   return d && ph.some(f=>f[0]===d.photo) ? {photo:ph.find(f=>f[0]===d.photo),x:d.x,y:d.y} : {photo:ph[(p.cover||1)-1]||ph[0],x:50,y:50};
 };
 function persistCovers(){
