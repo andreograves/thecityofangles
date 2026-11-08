@@ -171,7 +171,6 @@ const PROJECTS = [
   {"slug":"dtla-fashion-shoot","title":"DTLA Fashion Shoot","folder":"1a5Ph0mALKjS2IFss6nSroBOT7izeWi7X","label":"Photos","count":117},
   {"slug":"hubby-jenkins","title":"Hubby Jenkins","folder":"1yFmmWVUbmIIwIIxECX-A0c1_lZptyJYi","label":"Terra Blues · January 11, 2026","count":41},
   {"slug":"the-prayer-circle","title":"The Prayer Circle","folder":"18KZDBlF24Wit-1lXZ3rbW3P7wiS0M2eF","label":"The Prayer Chain reunion · Full-size photos","count":28},
-  {"slug":"marc","title":"Marc","folder":"1eZjKb089AR-Flt5Jw4_BI_l8F4UuOCp0","label":"House edits","count":30,"extra":[{"label":"Headshot edits","folder":"1e_YRRc8Pchp-nzkzCrg9TdMmtjC9J_1_"}]},
   {"slug":"j-ward","title":"J. Ward","folder":"1ekU67LGRBo1WxR8POysg8T-XDReDGAgb","label":"Edited photos","count":5},
   {"slug":"black-and-loud","title":"Black and Loud","folder":"1IcR7EPfxj8kCXw4Bs-zy0AaaVgjiF3OR","label":"Seattle · Full-size photos","count":5},
 
@@ -197,7 +196,7 @@ function indexView(){
     const ph = p.key && PHOTOS[p.key];
     if (!ph) return `<div class="proj soon"><h3>${esc(p.title)}</h3><div class="lbl"><span class="n">Coming soon</span></div></div>`;
     const c = ph[(p.cover||1)-1] || ph[0];
-    return `<a class="proj" href="#/${p.slug}"><img src="${photoSrc(c)}" width="${c[1]}" height="${c[2]}"${p.pos ? ` style="object-position:${p.pos}"` : ''} alt="" loading="lazy"><div class="lbl"><h3>${esc(p.title)}</h3></div></a>`;
+    return `<a class="proj" href="#/${p.slug}"><img src="${photoSrc(c)}" width="${c[1]}" height="${c[2]}" style="object-position:50% 50%" alt="" loading="lazy"><div class="lbl"><h3>${esc(p.title)}</h3></div></a>`;
   }).join('')}</div>`;
 }
 
